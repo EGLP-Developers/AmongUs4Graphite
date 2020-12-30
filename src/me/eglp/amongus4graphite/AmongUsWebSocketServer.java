@@ -25,17 +25,11 @@ public class AmongUsWebSocketServer {
 	public AmongUsWebSocketServer() {
 		Configuration c = new Configuration();
 		c.setPort(6585);
-//		c.setHostname("127.0.0.1");
 		c.setHostname("0.0.0.0");
 		socketServer = new SocketIOServer(c);
 		captureUsers = new ArrayList<>();
 		
-		socketServer.addDisconnectListener(client -> {
-			AmongUsCaptureUser u = getCaptureUser(client);
-			if(u != null) {
-				// TODO: do stuff
-			}
-		});
+		socketServer.addDisconnectListener(client -> captureUsers.remove(getCaptureUser(client)));
 		
 		socketServer.addEventListener("botID", String.class, (client, data, ackSender) -> System.out.println(data)); // TODO: implement?
 		
@@ -52,9 +46,7 @@ public class AmongUsWebSocketServer {
 		});
 		
 		socketServer.addEventListener("lobby", String.class, (client, data, ackSender) -> {
-			System.out.println("YEET");
 			AmongUsCaptureUser u = getCaptureUser(client);
-			System.out.println("D: " + u);
 			if(u == null) {
 				client.disconnect();
 				return;
