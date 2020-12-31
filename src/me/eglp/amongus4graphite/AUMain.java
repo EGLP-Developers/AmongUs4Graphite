@@ -44,6 +44,13 @@ public class AUMain {
 				public void lobbyChanged(AmongUsCaptureUser captureUser, LobbyEvent event) {
 					System.out.println(">> LOBBY IS NOW: " + event.getLobbyCode() + " in " + event.getRegion() + " on " + event.getMap());
 				}
+				
+				@Override
+				public void connectCode(AmongUsCaptureUser captureUser, String code) {
+					// TODO Auto-generated method stub
+					
+				}
+				
 			});
 			
 			se.start();

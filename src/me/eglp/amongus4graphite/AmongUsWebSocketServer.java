@@ -61,12 +61,12 @@ public class AmongUsWebSocketServer {
 		socketServer.addEventListener("connectCode", String.class, (client, data, ackSender) -> {
 			System.out.println("CON: " + data);
 			AmongUsCaptureUser u = getCaptureUser(data);
-			if(u != null) {
-//				u.getSocketClient().disconnect(); TODO: why does this cause the client to loop reconnects?
-				captureUsers.remove(u);
-			}
+			if(u == null) return;
 			
 			client.set("code", data);
+			
+			listener.connectCode(u, data);
+			
 			captureUsers.add(new AmongUsCaptureUser(client));
 		});
 		
@@ -243,7 +243,7 @@ public class AmongUsWebSocketServer {
 	
 	private AmongUsCaptureUser getCaptureUser(String code) {
 		return captureUsers.stream()
-				.filter(u -> u.getSocketClient().has("code") && u.getSocketClient().get("code").equals(code))
+				.filter(u -> u.getCode().equals(code))
 				.findFirst().orElse(null);
 	}
 	
@@ -255,8 +255,13 @@ public class AmongUsWebSocketServer {
 		return listener;
 	}
 	
+	public AmongUsCaptureUser createCaptureUser() {
+		return new AmongUsCaptureUser(null);
+		
+	}
+	
 	public static String newRandomCode() {
 		return Long.toHexString(System.nanoTime() ^ new Random().nextLong()).toUpperCase(); // Amazing randomness, patent pending TODO: improve
 	}
-
+	
 }

@@ -16,4 +16,6 @@ public interface AmongUsListener {
 	
 	public void lobbyChanged(AmongUsCaptureUser captureUser, LobbyEvent event);
 	
+	public void connectCode(AmongUsCaptureUser captureUser, String code);
+	
 }
