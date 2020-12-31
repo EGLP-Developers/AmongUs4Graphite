@@ -33,25 +33,6 @@ public class AmongUsWebSocketServer {
 		c.setHostname("0.0.0.0");
 		socketServer = new SocketIOServer(c);
 		
-//		socketServer = io.scalecube.socketio.SocketIOServer.newInstance(ServerConfiguration.builder()
-//				.port(6585)
-//				.sslContext((SSLContext) null)
-////				.sslContext(SslContext.)
-//				.build());
-//		
-//		socketServer.setListener(new SocketIOAdapter() {
-//			
-//			@Override
-//			public void onConnect(Session session) {
-//				System.out.println("YO");
-//			}
-//			
-//			@Override
-//			public void onMessage(Session session, ByteBuf message) {
-//				System.out.println(message.toString(StandardCharsets.UTF_8));
-//			}
-//		});
-		
 		captureUsers = new ArrayList<>();
 		
 		socketServer.addDisconnectListener(client -> captureUsers.remove(getCaptureUser(client)));
@@ -59,7 +40,6 @@ public class AmongUsWebSocketServer {
 		socketServer.addEventListener("botID", String.class, (client, data, ackSender) -> System.out.println(data)); // TODO: implement?
 		
 		socketServer.addEventListener("connectCode", String.class, (client, data, ackSender) -> {
-			System.out.println("CON: " + data);
 			AmongUsCaptureUser u = getCaptureUser(data);
 			if(u == null) return;
 			
@@ -90,18 +70,8 @@ public class AmongUsWebSocketServer {
 			}
 		});
 		
-		socketServer.addEventListener("taskFailed", String.class, (client, data, ackSender) -> {
-			System.out.println("Task failed: " + data);
-		});
-		
-		socketServer.addEventListener("taskComplete", String.class, (client, data, ackSender) -> {
-			System.out.println("Task complete: " + data);
-		});
-		
 		socketServer.addEventListener("state", Long.class, (client, data, ackSender) -> {
-			System.out.println("STATE " + data);
 			AmongUsCaptureUser u = getCaptureUser(client);
-			System.out.println("USER: " + u);
 			if(u == null) {
 				client.disconnect();
 				return;
@@ -109,8 +79,6 @@ public class AmongUsWebSocketServer {
 			
 			try {
 				GameState newState = GameState.decodePrimitive(data);
-				
-				System.out.println(newState);
 				
 				List<AmongUsPlayer> deadPlayers = u.getRoom().getPlayers().stream()
 						.filter(AmongUsPlayer::isDead)
@@ -120,8 +88,6 @@ public class AmongUsWebSocketServer {
 						.filter(pl -> !pl.isDead())
 						.collect(Collectors.toList());
 				
-				System.out.println("DEAD: " + deadPlayers);
-				System.out.println("ALIVE: " + alivePlayers);
 				switch(newState) {
 					case DISCUSSION:
 					{
@@ -149,8 +115,6 @@ public class AmongUsWebSocketServer {
 				client.disconnect();
 				return;
 			}
-			
-			System.out.println("Player: " + data);
 			
 			try {
 				PlayerChangedEvent e = JSONConverter.decodeObject(new JSONObject(data), PlayerChangedEvent.class);
@@ -213,7 +177,6 @@ public class AmongUsWebSocketServer {
 		});
 		
 		socketServer.addEventListener("gameover", String.class, (client, data, ackSender) -> {
-			System.out.println("Game over: " + data);
 			AmongUsCaptureUser u = getCaptureUser(client);
 			if(u == null) {
 				client.disconnect();
@@ -232,7 +195,6 @@ public class AmongUsWebSocketServer {
 	public void start() {
 		try {
 			System.out.println("Waiting");
-//			socketServer.start();
 			Future<Void> f = socketServer.startAsync();
 			f.await(5, TimeUnit.SECONDS);
 			if(!f.isSuccess()) throw new FriendlyException("Failed to start Socket.io server", f.cause());
