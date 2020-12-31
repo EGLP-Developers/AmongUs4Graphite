@@ -1,5 +1,7 @@
 package me.eglp.amongus4graphite.game;
 
+import java.util.Map;
+
 import me.eglp.amongus4graphite.auc.PlayerColor;
 
 public class AmongUsPlayer {
@@ -7,6 +9,7 @@ public class AmongUsPlayer {
 	private String amongUsName;
 	private PlayerColor amongUsColor;
 	private boolean isDead;
+	private Map<String, Object> data;
 	
 	public AmongUsPlayer(String amongUsName, PlayerColor amongUsColor) {
 		this.amongUsName = amongUsName;
@@ -35,6 +38,14 @@ public class AmongUsPlayer {
 	
 	public boolean isDead() {
 		return isDead;
+	}
+	
+	public void setData(String key, Object value) {
+		data.put(key, value);
+	}
+	
+	public Object getData(String key) {
+		return data.get(key);
 	}
 
 }
