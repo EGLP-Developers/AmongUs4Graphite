@@ -36,5 +36,10 @@
 			<artifactId>netty-socketio</artifactId>
 			<version>1.7.12</version>
 		</dependency>
+		<dependency>
+			<groupId>io.scalecube</groupId>
+			<artifactId>socketio</artifactId>
+			<version>2.3.4</version>
+		</dependency>
 	</dependencies>
 </project>

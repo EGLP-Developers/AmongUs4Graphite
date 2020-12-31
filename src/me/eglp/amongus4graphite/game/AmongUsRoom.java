@@ -12,18 +12,30 @@ public class AmongUsRoom {
 	private PlayRegion region;
 	private PlayMap map;
 	
-	public AmongUsRoom(PlayRegion region, PlayMap map) {
+	public AmongUsRoom() {
 		this.players = new ArrayList<>();
-		this.region = region;
-		this.map = map;
 	}
 	
 	public List<AmongUsPlayer> getPlayers() {
 		return players;
 	}
+	
+	public AmongUsPlayer getPlayer(String name) {
+		return players.stream()
+				.filter(p -> p.getAmongUsName().equals(name))
+				.findFirst().orElse(null);
+	}
+	
+	public void setRegion(PlayRegion region) {
+		this.region = region;
+	}
 
 	public PlayRegion getRegion() {
 		return region;
+	}
+	
+	public void setMap(PlayMap map) {
+		this.map = map;
 	}
 
 	public PlayMap getMap() {

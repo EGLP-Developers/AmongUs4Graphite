@@ -6,10 +6,12 @@ public class AmongUsCaptureUser extends AmongUsPlayer {
 	
 	private SocketIOClient socketClient;
 	private String code;
+	private AmongUsRoom room;
 	
 	public AmongUsCaptureUser(SocketIOClient socketClient) {
 		super(null, null);
 		this.socketClient = socketClient;
+		this.room = new AmongUsRoom();
 	}
 	
 	public void setCode(String code) {
@@ -22,6 +24,10 @@ public class AmongUsCaptureUser extends AmongUsPlayer {
 	
 	public String getCode() {
 		return code;
+	}
+	
+	public AmongUsRoom getRoom() {
+		return room;
 	}
 
 }
