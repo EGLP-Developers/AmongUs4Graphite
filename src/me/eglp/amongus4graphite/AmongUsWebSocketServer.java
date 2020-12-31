@@ -27,9 +27,9 @@ public class AmongUsWebSocketServer {
 	private List<AmongUsCaptureUser> captureUsers;
 	private AmongUsListener listener;
 	
-	public AmongUsWebSocketServer() {
+	public AmongUsWebSocketServer(int port) {
 		Configuration c = new Configuration();
-		c.setPort(6585);
+		c.setPort(port);
 		c.setHostname("0.0.0.0");
 		socketServer = new SocketIOServer(c);
 		
@@ -80,6 +80,7 @@ public class AmongUsWebSocketServer {
 			try {
 				LobbyEvent e = JSONConverter.decodeObject(new JSONObject(data), LobbyEvent.class);
 				
+				u.getRoom().setLobbyCode(e.getLobbyCode());
 				u.getRoom().setRegion(e.getRegion());
 				u.getRoom().setMap(e.getMap());
 				
@@ -156,30 +157,34 @@ public class AmongUsWebSocketServer {
 				switch(e.getAction()) {
 					case DIED:
 					case EXILED:
+					case DISCONNECTED:
 					{
 						AmongUsPlayer pl = u.getRoom().getPlayer(e.getName());
 						if(pl != null) pl.setDead(true);
-						
-						listener.playerUpdated(u, pl);
+
+						listener.playersUpdated(u);
 						break;
 					}
-					case DISCONNECTED:
-						break;
 					case CHANGED_COLOR:
 					case FORCE_UPDATED:
 					{
 						AmongUsPlayer pl = u.getRoom().getPlayer(e.getName());
-						if(pl == null) {
-							pl = new AmongUsPlayer(e.getName(), e.getColor());
-							pl.setDead(e.isDead());
-							u.getRoom().getPlayers().add(pl);
+						if(e.isDisconnected()) {
+							if(pl != null) listener.playerLeft(u, pl);
 						}else {
-							pl.setAmongUsName(e.getName());
-							pl.setAmongUsColor(e.getColor());
-							pl.setDead(e.isDead());
+							if(pl == null) {
+								pl = new AmongUsPlayer(e.getName(), e.getColor());
+								
+								pl.setDead(e.isDead());
+								u.getRoom().getPlayers().add(pl);
+							}else {
+								pl.setAmongUsName(e.getName());
+								pl.setAmongUsColor(e.getColor());
+								pl.setDead(e.isDead());
+							}
 						}
-						
-						listener.playerUpdated(u, pl);
+
+						listener.playersUpdated(u);
 						break;
 					}
 					case JOINED:
@@ -215,7 +220,12 @@ public class AmongUsWebSocketServer {
 				return;
 			}
 			
-			u.getRoom().getPlayers().forEach(pl -> listener.unmutePlayer(u, pl));
+			u.getRoom().getPlayers().forEach(pl -> {
+				pl.setDead(false);
+				listener.unmutePlayer(u, pl);
+			});
+			
+			listener.playersUpdated(u);
 		});
 	}
 	
@@ -256,8 +266,14 @@ public class AmongUsWebSocketServer {
 	}
 	
 	public AmongUsCaptureUser createCaptureUser() {
-		return new AmongUsCaptureUser(null);
-		
+		AmongUsCaptureUser c = new AmongUsCaptureUser(null);
+		c.setCode(newRandomCode());
+		captureUsers.add(c);
+		return c;
+	}
+	
+	public List<AmongUsCaptureUser> getCaptureUsers() {
+		return captureUsers;
 	}
 	
 	public static String newRandomCode() {

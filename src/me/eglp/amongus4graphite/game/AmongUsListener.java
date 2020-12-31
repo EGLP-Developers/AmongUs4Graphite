@@ -8,7 +8,7 @@ public interface AmongUsListener {
 	
 	public void playerLeft(AmongUsCaptureUser captureUser, AmongUsPlayer player);
 	
-	public void playerUpdated(AmongUsCaptureUser captureUser, AmongUsPlayer player);
+	public void playersUpdated(AmongUsCaptureUser captureUser);
 	
 	public void mutePlayer(AmongUsCaptureUser captureUser, AmongUsPlayer player);
 	

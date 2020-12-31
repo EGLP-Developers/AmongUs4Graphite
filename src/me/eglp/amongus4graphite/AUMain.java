@@ -11,7 +11,7 @@ public class AUMain {
 	
 	public static void main(String[] args) {
 		try {
-			AmongUsWebSocketServer se = new AmongUsWebSocketServer();
+			AmongUsWebSocketServer se = new AmongUsWebSocketServer(6585);
 			
 			se.setListener(new AmongUsListener() {
 				
@@ -21,8 +21,8 @@ public class AUMain {
 				}
 				
 				@Override
-				public void playerUpdated(AmongUsCaptureUser captureUser, AmongUsPlayer player) {
-					System.out.println(">> PLAYER UPDATED: " + player.getAmongUsName() + " (" + player.getAmongUsColor() + ")");
+				public void playersUpdated(AmongUsCaptureUser captureUser) {
+					System.out.println(">> PLAYERS UPDATED");
 				}
 				
 				@Override

@@ -1,5 +1,6 @@
 package me.eglp.amongus4graphite.game;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import me.eglp.amongus4graphite.auc.PlayerColor;
@@ -14,6 +15,7 @@ public class AmongUsPlayer {
 	public AmongUsPlayer(String amongUsName, PlayerColor amongUsColor) {
 		this.amongUsName = amongUsName;
 		this.amongUsColor = amongUsColor;
+		this.data = new HashMap<>();
 	}
 	
 	public void setAmongUsName(String amongUsName) {
