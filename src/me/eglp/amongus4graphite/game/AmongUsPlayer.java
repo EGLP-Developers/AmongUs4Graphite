@@ -10,6 +10,7 @@ public class AmongUsPlayer {
 	private String amongUsName;
 	private PlayerColor amongUsColor;
 	private boolean isDead;
+	private boolean isKnownDead;
 	private Map<String, Object> data;
 	
 	public AmongUsPlayer(String amongUsName, PlayerColor amongUsColor) {
@@ -40,6 +41,14 @@ public class AmongUsPlayer {
 	
 	public boolean isDead() {
 		return isDead;
+	}
+	
+	public void setKnownDead(boolean isKnownDead) {
+		this.isKnownDead = isKnownDead;
+	}
+	
+	public boolean isKnownDead() {
+		return isKnownDead;
 	}
 	
 	public void setData(String key, Object value) {

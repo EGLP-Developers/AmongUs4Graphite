@@ -93,6 +93,15 @@ public class AmongUsWebSocketServer {
 					{
 						deadPlayers.forEach(pl -> listener.mutePlayer(u, pl));
 						alivePlayers.forEach(pl -> listener.unmutePlayer(u, pl));
+						
+						boolean upd = false;
+						for(AmongUsPlayer pl : deadPlayers) {
+							if(pl.isKnownDead()) return;
+							pl.setKnownDead(true);
+							upd = true;
+						}
+						if(upd) listener.playersUpdated(u);
+						
 						break;
 					}
 					case TASKS:
@@ -185,6 +194,7 @@ public class AmongUsWebSocketServer {
 			
 			u.getRoom().getPlayers().forEach(pl -> {
 				pl.setDead(false);
+				pl.setKnownDead(false);
 				listener.unmutePlayer(u, pl);
 			});
 			
