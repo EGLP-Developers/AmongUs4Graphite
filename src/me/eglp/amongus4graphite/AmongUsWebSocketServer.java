@@ -35,7 +35,13 @@ public class AmongUsWebSocketServer {
 		
 		captureUsers = new ArrayList<>();
 		
-		socketServer.addDisconnectListener(client -> captureUsers.remove(getCaptureUser(client)));
+		socketServer.addDisconnectListener(client -> {
+			AmongUsCaptureUser u = getCaptureUser(client);
+			if(u == null) return;
+			
+			listener.disconnected(u);
+			captureUsers.remove(u);
+		});
 		
 		socketServer.addEventListener("botID", String.class, (client, data, ackSender) -> System.out.println(data)); // TODO: implement?
 		

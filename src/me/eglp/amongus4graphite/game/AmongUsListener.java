@@ -18,4 +18,6 @@ public interface AmongUsListener {
 	
 	public void connectCode(AmongUsCaptureUser captureUser, String code);
 	
+	public void disconnected(AmongUsCaptureUser captureUser);
+	
 }
