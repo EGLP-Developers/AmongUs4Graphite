@@ -4,9 +4,19 @@ import me.mrletsplay.mrcore.json.converter.JSONPrimitiveConvertible;
 
 public enum PlayRegion implements JSONPrimitiveConvertible {
 
-	NORTH_AMERICA,
-	ASIA,
-	EUROPE;
+	NORTH_AMERICA("North America"),
+	ASIA("Asia"),
+	EUROPE("Europe");
+	
+	private String friendlyName;
+
+	private PlayRegion(String friendlyName) {
+		this.friendlyName = friendlyName;
+	}
+	
+	public String getFriendlyName() {
+		return friendlyName;
+	}
 
 	@Override
 	public Object toJSONPrimitive() {
