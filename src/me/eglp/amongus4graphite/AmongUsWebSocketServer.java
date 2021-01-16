@@ -31,6 +31,7 @@ public class AmongUsWebSocketServer {
 		Configuration c = new Configuration();
 		c.setPort(port);
 		c.setHostname("0.0.0.0");
+		c.setWorkerThreads(1);
 		socketServer = new SocketIOServer(c);
 		
 		captureUsers = new ArrayList<>();
@@ -43,17 +44,19 @@ public class AmongUsWebSocketServer {
 			captureUsers.remove(u);
 		});
 		
-		socketServer.addEventListener("botID", String.class, (client, data, ackSender) -> System.out.println(data)); // TODO: implement?
+//		socketServer.addEventListener("botID", String.class, (client, data, ackSender) -> System.out.println(data)); // TODO: implement?
 		
 		socketServer.addEventListener("connectCode", String.class, (client, data, ackSender) -> {
-			AmongUsCaptureUser u = getCaptureUser(data);
-			if(u == null) return;
-			
-			client.set("code", data);
-			
-			listener.connectCode(u, data);
-			
-			captureUsers.add(new AmongUsCaptureUser(client));
+			try {
+				AmongUsCaptureUser u = getCaptureUser(data);
+				if(u == null) return;
+				
+				client.set("code", data);
+				
+				listener.connectCode(u, data);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		});
 		
 		socketServer.addEventListener("lobby", String.class, (client, data, ackSender) -> {
@@ -231,7 +234,7 @@ public class AmongUsWebSocketServer {
 	
 	private AmongUsCaptureUser getCaptureUser(String code) {
 		return captureUsers.stream()
-				.filter(u -> u.getCode().equals(code))
+				.filter(u -> code.equals(u.getCode()))
 				.findFirst().orElse(null);
 	}
 	
@@ -244,7 +247,7 @@ public class AmongUsWebSocketServer {
 	}
 	
 	public AmongUsCaptureUser createCaptureUser() {
-		AmongUsCaptureUser c = new AmongUsCaptureUser(null);
+		AmongUsCaptureUser c = new AmongUsCaptureUser();
 		c.setCode(newRandomCode());
 		captureUsers.add(c);
 		return c;

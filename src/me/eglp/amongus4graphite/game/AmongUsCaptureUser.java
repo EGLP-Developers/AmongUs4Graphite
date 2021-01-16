@@ -3,15 +3,13 @@ package me.eglp.amongus4graphite.game;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.corundumstudio.socketio.SocketIOClient;
-
 public class AmongUsCaptureUser {
 	
 	private String code;
 	private AmongUsRoom room;
 	private Map<String, Object> data;
 	
-	public AmongUsCaptureUser(SocketIOClient socketClient) {
+	public AmongUsCaptureUser() {
 		this.room = new AmongUsRoom();
 		this.data = new HashMap<>();
 	}
