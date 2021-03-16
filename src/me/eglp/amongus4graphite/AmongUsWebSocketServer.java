@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.corundumstudio.socketio.Configuration;
+import com.corundumstudio.socketio.SocketConfig;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 
@@ -32,6 +33,11 @@ public class AmongUsWebSocketServer {
 		c.setPort(port);
 		c.setHostname("0.0.0.0");
 		c.setWorkerThreads(1);
+		
+		SocketConfig cf = new SocketConfig();
+		cf.setReuseAddress(true);
+		c.setSocketConfig(cf);
+		
 		socketServer = new SocketIOServer(c);
 		
 		captureUsers = new ArrayList<>();
