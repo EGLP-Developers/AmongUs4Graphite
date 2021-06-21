@@ -8,6 +8,7 @@ public enum GameState implements JSONPrimitiveConvertible {
 	TASKS,
 	DISCUSSION,
 	MENU,
+	ENDED,
 	UNKNOWN;
 
 	@Override

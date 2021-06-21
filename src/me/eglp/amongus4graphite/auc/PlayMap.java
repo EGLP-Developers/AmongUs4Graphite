@@ -6,7 +6,9 @@ public enum PlayMap implements JSONPrimitiveConvertible {
 
 	SKELD,
 	MIRA,
-	POLUS;
+	POLUS,
+	DLEKS,
+	AIRSHIP;
 
 	@Override
 	public Object toJSONPrimitive() {

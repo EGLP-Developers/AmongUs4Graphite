@@ -15,7 +15,13 @@ public enum PlayerColor implements JSONPrimitiveConvertible {
 	PURPLE,
 	BROWN,
 	CYAN,
-	LIME;
+	LIME,
+	MAROON,
+	ROSE,
+	BANANA,
+	GRAY,
+	TAN,
+	SUNSET;
 
 	@Override
 	public Object toJSONPrimitive() {
