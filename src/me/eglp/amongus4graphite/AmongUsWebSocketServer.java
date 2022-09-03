@@ -178,6 +178,8 @@ public class AmongUsWebSocketServer {
 					case JOINED:
 					{
 						AmongUsPlayer newPlayer = new AmongUsPlayer(e.getName(), e.getColor());
+						AmongUsPlayer oldPlayer = u.getRoom().getPlayer(e.getColor());
+						if(oldPlayer != null) u.getRoom().getPlayers().remove(oldPlayer);
 						u.getRoom().getPlayers().add(newPlayer);
 						listener.playerJoined(u, newPlayer);
 						break;
@@ -263,8 +265,18 @@ public class AmongUsWebSocketServer {
 		return captureUsers;
 	}
 	
-	public static String newRandomCode() {
-		return Long.toHexString(System.nanoTime() ^ new Random().nextLong()).toUpperCase(); // Amazing randomness, patent pending TODO: improve
+	private static String genCode() {
+		StringBuilder code = new StringBuilder();
+		while(code.length() < 8) {
+			code.append(new Random().nextInt(10));
+		}
+		return code.toString();
+	}
+	
+	public String newRandomCode() {
+		String code;
+		while(getCaptureUser(code = genCode()) != null);
+		return code;
 	}
 	
 }
